@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import SnapKit
 
 protocol LoginScreenProtocol : AnyObject {
     func tappedLoginButton()
@@ -21,7 +22,6 @@ class LoginScreen: UIView{
     
     lazy var loginLabel: UILabel = {
         let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
         label.textColor = .black
         label.font = UIFont.boldSystemFont(ofSize: 40)
         label.text = "Login"
@@ -30,7 +30,6 @@ class LoginScreen: UIView{
     
     lazy var emailTextField: UITextField = {
         let tf = UITextField()
-        tf.translatesAutoresizingMaskIntoConstraints = false
         tf.autocorrectionType = .no
         tf.backgroundColor = .white
         tf.borderStyle = .roundedRect
@@ -42,7 +41,6 @@ class LoginScreen: UIView{
    
     lazy var passwordTextField: UITextField = {
         let tf = UITextField()
-        tf.translatesAutoresizingMaskIntoConstraints = false
         tf.autocorrectionType = .no
         tf.backgroundColor = .white
         tf.borderStyle = .roundedRect
@@ -55,7 +53,6 @@ class LoginScreen: UIView{
     
     lazy var loginButton: UIButton = {
         let button : UIButton = UIButton()
-        button.translatesAutoresizingMaskIntoConstraints = false
         button.setTitle("Logar", for: .normal)
         button.titleLabel?.font = UIFont.systemFont(ofSize: 18)
         button.setTitleColor(.white, for: .normal)
@@ -73,11 +70,14 @@ class LoginScreen: UIView{
     }
     
     
-   override init(frame: CGRect) {
-       super.init(frame: frame)
-       backgroundColor = .systemBlue
-       addElements()
-       configConstraints()
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        backgroundColor = .systemBlue
+        addElements()
+        configLoginLabelConstraints()
+        configEmailTextFieldConstraints()
+        configPasswordTextFieldConstraints()
+        configLoginButtonConstraints()
     }
     
     required init?(coder: NSCoder) {
@@ -90,27 +90,40 @@ class LoginScreen: UIView{
         addSubview(passwordTextField)
         addSubview(loginButton)
     }
-    private func configConstraints(){
-        NSLayoutConstraint.activate([
-            loginLabel.topAnchor.constraint(equalTo: safeAreaLayoutGuide.topAnchor, constant: 20),
-            loginLabel.centerXAnchor.constraint(equalTo: centerXAnchor),
-            
-            emailTextField.topAnchor.constraint(equalTo: loginLabel.bottomAnchor, constant: 45),
-            emailTextField.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 20),
-            emailTextField.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -20),
-            emailTextField.heightAnchor.constraint(equalToConstant: 45),
-            
-            passwordTextField.topAnchor.constraint(equalTo: emailTextField.bottomAnchor, constant: 25),
-            passwordTextField.leadingAnchor.constraint(equalTo: emailTextField.leadingAnchor),
-            passwordTextField.trailingAnchor.constraint(equalTo: emailTextField.trailingAnchor),
-            passwordTextField.heightAnchor.constraint(equalTo: emailTextField.heightAnchor),
-            
-            loginButton.topAnchor.constraint(equalTo: passwordTextField.bottomAnchor, constant: 50),
-            loginButton.leadingAnchor.constraint(equalTo: emailTextField.leadingAnchor),
-            loginButton.trailingAnchor.constraint(equalTo: emailTextField.trailingAnchor),
-            loginButton.heightAnchor.constraint(equalTo: emailTextField.heightAnchor),
-
-        ])
+  
+    
+    private func configLoginLabelConstraints(){
+        loginLabel.snp.makeConstraints{make in
+            make.top.equalTo(safeAreaLayoutGuide.snp.top).offset(20)
+            make.centerX.equalToSuperview()
+        }
+    }
+    
+    private func configEmailTextFieldConstraints(){
+        emailTextField.snp.makeConstraints{make in
+            make.top.equalTo(loginLabel.snp.bottom).offset(45)
+            make.leading.equalToSuperview().offset(20)
+            make.trailing.equalToSuperview().inset(20)
+            make.height.equalTo(45)
+        }
+    }
+    
+    private func configPasswordTextFieldConstraints(){
+        passwordTextField.snp.makeConstraints{make in
+            make.top.equalTo(emailTextField.snp.bottom).offset(25)
+            make.leading.equalTo(emailTextField.snp.leading)
+            make.trailing.equalTo(emailTextField.snp.trailing)
+            make.height.equalTo(emailTextField)
+        }
+    }
+    
+    private func configLoginButtonConstraints(){
+        loginButton.snp.makeConstraints{make in
+            make.top.equalTo(passwordTextField.snp.bottom).offset(50)
+            make.leading.equalTo(emailTextField)
+            make.trailing.equalTo(emailTextField)
+            make.height.equalTo(emailTextField)
+        }
     }
     
     public func configTextFieldDelegate(delegate : UITextFieldDelegate){
